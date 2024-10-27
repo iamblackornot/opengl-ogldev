@@ -6,19 +6,25 @@
 #include <stdlib.h>
 #include <memory>
 #include <iostream>
+#include <functional>
 
 #include <GL/GLProgram.h>
+#include <GL/GLTexture.h>
 #include <utility/GLFW_C_Wrapper.h>
 #include <utility/GLFW_DebugInfo.h>
 #include <utility/helper.h>
 #include <utility/mouse_tracker.h>
 #include <engine/pipeline.h>
 #include <objects/cube.h>
+#include <landfill/landfill.h>
+
+#include <glm/gtc/type_ptr.hpp>
 
 constexpr int SMALL_SCREEN_WIDTH = 800;
 constexpr int SMALL_SCREEN_HEIGHT = 600;
 
 constexpr char const TRANSFORM_LOCATION[] = "gTransform";
+constexpr char const SAMPLER_LOCATION[] = "gSampler";
 
 using MouseTrackerOpt = std::optional<std::reference_wrapper<MouseTracker const>>;
 using MouseTrackerRef = std::unique_ptr<MouseTracker>;

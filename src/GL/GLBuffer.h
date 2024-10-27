@@ -3,7 +3,7 @@
 #include <GL/glew.h>
 #include <vector>
 
-template<int GL_BUFFER_TYPE>
+template<GLenum GL_BUFFER_TYPE>
 class GLBuffer
 {
 public:

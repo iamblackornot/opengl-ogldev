@@ -10,11 +10,11 @@
 
 namespace camera_utility
 {
-	inline constexpr float MAX_YAWL  =  180.0f;
-	inline constexpr float MIN_YAWL  = -180.0f;
+	inline constexpr double MAX_YAWL  =  180.0;
+	inline constexpr double MIN_YAWL  = -180.0;
 
-	inline constexpr float MAX_PITCH =   90.0f;
-	inline constexpr float MIN_PITCH =  -90.0f;
+	inline constexpr double MAX_PITCH =   90.0;
+	inline constexpr double MIN_PITCH =  -90.0;
 
 	float CalculateYawl(glm::vec3 direction);
 	float CalculatePitch(glm::vec3 direction);
@@ -44,7 +44,7 @@ public:
 	void MoveDown();
 	void MoveForward();
 	void MoveBackward();
-	void Rotate(float yawDelta, float pitchDelta);
+	void Rotate(double yawDelta, double pitchDelta);
 private:
 	void CalculateTilt();
 	void CalculateStrafe();
@@ -54,8 +54,8 @@ public:
 private:
 	float _cameraSpeed = 0.1f;
 
-	float _yawl = 0.f;
-	float _pitch = 0.f;
+	double _yawl = 0.f;
+	double _pitch = 0.f;
 
 	glm::vec3 _position   { 0, 0, 0 };
 	glm::vec3 _direction  { 0, 0, 1 };

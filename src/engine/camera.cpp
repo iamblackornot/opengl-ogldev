@@ -128,13 +128,13 @@ void Camera::CalculateStrafe()
 	_strafe = - glm::cross(_direction, _tilt);
 }
 
-void Camera::Rotate(float yawDelta, float pitchDelta)
+void Camera::Rotate(double yawDelta, double pitchDelta)
 {
-	_yawl += yawDelta;
+	_yawl -= yawDelta;
 	_yawl = _yawl > camera_utility::MAX_YAWL ? _yawl - 360.f : _yawl;
 	_yawl = _yawl < camera_utility::MIN_YAWL ? _yawl + 360.f : _yawl;
 
-	_pitch += pitchDelta;
+	_pitch -= pitchDelta;
 	_pitch = std::min(_pitch, camera_utility::MAX_PITCH);
 	_pitch = std::max(_pitch, camera_utility::MIN_PITCH);
 

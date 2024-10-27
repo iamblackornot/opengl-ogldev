@@ -12,7 +12,8 @@ public:
 	GLuint GetElementBuffer();
 	
 private:
-	void FillVertexBuffer();
+	void FillColoredVertexBuffer();
+	void FillTexturedVertexBuffer();
 	void FillIndexBuffer();
 
 private:

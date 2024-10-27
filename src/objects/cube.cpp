@@ -2,7 +2,8 @@
 
 Cube::Cube()
 {
-	FillVertexBuffer();
+	FillTexturedVertexBuffer();
+	//FillColoredVertexBuffer();
 	FillIndexBuffer();
 }
 
@@ -16,18 +17,40 @@ GLuint Cube::GetElementBuffer()
 	return _ebuffer.GetHandle();
 }
 
-void Cube::FillVertexBuffer()
+void Cube::FillColoredVertexBuffer()
 {
-	std::vector<GLVertex> vertexList;
+	std::vector<GLColoredVertex> vertexList;
 
-	vertexList.emplace_back(glm::vec3{ 0.5f,   0.5f,   0.5f }, GenerateRandomColor());
+	vertexList.emplace_back(glm::vec3{  0.5f,   0.5f,   0.5f }, GenerateRandomColor());
 	vertexList.emplace_back(glm::vec3{ -0.5f,   0.5f,  -0.5f }, GenerateRandomColor());
 	vertexList.emplace_back(glm::vec3{ -0.5f,   0.5f,   0.5f }, GenerateRandomColor());
-	vertexList.emplace_back(glm::vec3{ 0.5f,  -0.5f,  -0.5f }, GenerateRandomColor());
+	vertexList.emplace_back(glm::vec3{  0.5f,  -0.5f,  -0.5f }, GenerateRandomColor());
 	vertexList.emplace_back(glm::vec3{ -0.5f,  -0.5f,  -0.5f }, GenerateRandomColor());
-	vertexList.emplace_back(glm::vec3{ 0.5f,   0.5f,  -0.5f }, GenerateRandomColor());
-	vertexList.emplace_back(glm::vec3{ 0.5f,  -0.5f,   0.5f }, GenerateRandomColor());
+	vertexList.emplace_back(glm::vec3{  0.5f,   0.5f,  -0.5f }, GenerateRandomColor());
+	vertexList.emplace_back(glm::vec3{  0.5f,  -0.5f,   0.5f }, GenerateRandomColor());
 	vertexList.emplace_back(glm::vec3{ -0.5f,  -0.5f,   0.5f }, GenerateRandomColor());
+
+
+	_vbuffer.SetData(vertexList);
+}
+
+void Cube::FillTexturedVertexBuffer()
+{
+	std::vector<GLTexturedVertex> vertexList;
+
+	glm::vec2 t00 = glm::vec2(0.0f, 0.0f);
+	glm::vec2 t01 = glm::vec2(0.0f, 1.0f);
+	glm::vec2 t10 = glm::vec2(1.0f, 0.0f);
+	glm::vec2 t11 = glm::vec2(1.0f, 1.0f);
+
+	vertexList.emplace_back(glm::vec3{  0.5f,   0.5f,   0.5f }, t00);
+	vertexList.emplace_back(glm::vec3{ -0.5f,   0.5f,  -0.5f }, t01);
+	vertexList.emplace_back(glm::vec3{ -0.5f,   0.5f,   0.5f }, t10);
+	vertexList.emplace_back(glm::vec3{  0.5f,  -0.5f,  -0.5f }, t11);
+	vertexList.emplace_back(glm::vec3{ -0.5f,  -0.5f,  -0.5f }, t00);
+	vertexList.emplace_back(glm::vec3{  0.5f,   0.5f,  -0.5f }, t10);
+	vertexList.emplace_back(glm::vec3{  0.5f,  -0.5f,   0.5f }, t01);
+	vertexList.emplace_back(glm::vec3{ -0.5f,  -0.5f,   0.5f }, t11);
 
 
 	_vbuffer.SetData(vertexList);
@@ -53,4 +76,3 @@ void Cube::FillIndexBuffer()
 
 	_ebuffer.SetData(indices);
 }
-

@@ -1,9 +1,4 @@
 #include "OpenGLApp.h"
-#include <utility/helper.h>
-#include <landfill/landfill.h>
-
-#include <functional>
-#include <glm/gtc/type_ptr.hpp>
 
 int OpenGLApp::Run(int argc, char** argv)
 {
@@ -17,6 +12,18 @@ int OpenGLApp::Run(int argc, char** argv)
     if (gTransformMatrix == GL_ERROR)
     {
         std::cout << "failed to get gTransform uniform location" << std::endl;
+        return EXIT_FAILURE;
+    }
+
+    GLint gSamplerLocation = _shaders.GetUniformLocation(SAMPLER_LOCATION);
+    if (gSamplerLocation == GL_ERROR) {
+        std::cout << "failed to get gSampler uniform location" << std::endl;
+        return EXIT_FAILURE;
+    }
+
+    GLTexture2D texture;
+    if (!texture.LoadFromFile("textures/bricks.jpg"))
+    {
         return EXIT_FAILURE;
     }
 
@@ -60,17 +67,25 @@ int OpenGLApp::Run(int argc, char** argv)
         glBindBuffer(GL_ARRAY_BUFFER, cube.GetVertexBuffer());
         glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, cube.GetElementBuffer());
 
+        texture.Bind(GL_TEXTURE0);
+        glUniform1i(gSamplerLocation, 0);
+
         // position
         glEnableVertexAttribArray(0);
-        glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(GLVertex), 0);
+        glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(GLTexturedVertex), 0);
+
+        // tex coords
+        glEnableVertexAttribArray(1);
+        glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, sizeof(GLTexturedVertex), (void*)(3 * sizeof(float)));
 
         // color
-        glEnableVertexAttribArray(1);
-        glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(GLVertex), (void*)(sizeof(glm::vec3)));
+        //glEnableVertexAttribArray(1);
+        //glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(GLColoredVertex), (void*)(sizeof(glm::vec3)));
 
         glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, 0);
 
         glDisableVertexAttribArray(0);
+        glDisableVertexAttribArray(1);
 
         glfwSwapBuffers(_window.handle);
         glfwPollEvents();
@@ -122,6 +137,10 @@ bool OpenGLApp::Init()
 
     //glfwSetWindowPos(window, 100, 100);
     SetGLFWCallbacks();
+
+    int textureUnits = 0;
+    glGetIntegerv(GL_MAX_TEXTURE_IMAGE_UNITS, &textureUnits);
+    std::cout << std::format("available texture units: {}", textureUnits) << std::endl;
 
     return true;
 }
@@ -227,7 +246,7 @@ void OpenGLApp::OnKeyEvent(int key, int scancode, int action, int mod)
 void OpenGLApp::OnCameraRotate(double xDelta, double yDelta)
 {
     std::cout << "Mouse moved while RMB pressed: deltaX = " << xDelta << ", deltaY = " << yDelta << std::endl;
-    float sensitivity = 1.f;
+    double sensitivity = 0.5;
     _camera.Rotate(xDelta * sensitivity, yDelta * sensitivity);
 }
 

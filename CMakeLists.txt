@@ -11,6 +11,7 @@ endif()
 
 execute_process(
     COMMAND ${CMAKE_COMMAND} -E copy_directory shaders ${CMAKE_BINARY_DIR}/shaders
+    COMMAND ${CMAKE_COMMAND} -E copy textures/bricks.jpg ${CMAKE_BINARY_DIR}/textures/bricks.jpg
     WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
 )
 
@@ -36,7 +37,7 @@ endif()
 link_directories(${LIB_BASE_PATH}/${CMAKE_BUILD_TYPE}) 
 
 # Add source to this project's executable.
-add_executable (opengl-ogldev ${SOURCES} ${HEADERS} "src/landfill/landfill.cpp")
+add_executable (opengl-ogldev ${SOURCES} ${HEADERS} )
 
 # Link the necessary libraries
 
