@@ -1,31 +1,6 @@
 ﻿#include "camera.h"
 
-namespace camera_utility
-{
-	float CalculateYawl(glm::vec3 direction)
-	{
-		direction = glm::normalize(direction);
-
-		float degrees = glm::degrees(glm::acos(direction.z));
-		degrees *= fless(direction.x, 0) ? -1 : 1;
-
-		return degrees;
-	}
-
-	float CalculatePitch(glm::vec3 direction)
-	{
-		direction = glm::normalize(direction);
-
-		float degrees = glm::degrees(glm::acos(direction.y));
-		degrees *= fless(direction.z, 0) ? 1 : -1;
-
-		return degrees;
-	}
-}
-
 Camera::Camera(glm::vec3 position, glm::vec3 direction, glm::vec3 tilt) :
-	_yawl(camera_utility::CalculateYawl(direction)),
-	_pitch(camera_utility::CalculatePitch(direction)),
 	_position(position), 
 	_direction(glm::normalize(direction)),
 	_tilt(glm::normalize(tilt)),
@@ -120,33 +95,28 @@ void Camera::MoveBackward()
 
 void Camera::CalculateTilt()
 {
-	_tilt = glm::cross(_direction, _strafe);
+	_tilt = glm::normalize(glm::cross(_direction, _strafe));
 }
 
 void Camera::CalculateStrafe()
 {
-	_strafe = - glm::cross(_direction, _tilt);
+	_strafe = - glm::normalize(glm::cross(_direction, _tilt));
 }
 
 void Camera::Rotate(double yawDelta, double pitchDelta)
 {
-	_yawl -= yawDelta;
-	_yawl = _yawl > camera_utility::MAX_YAWL ? _yawl - 360.f : _yawl;
-	_yawl = _yawl < camera_utility::MIN_YAWL ? _yawl + 360.f : _yawl;
+	float yaw = glm::radians(static_cast<float>(yawDelta));
 
-	_pitch -= pitchDelta;
-	_pitch = std::min(_pitch, camera_utility::MAX_PITCH);
-	_pitch = std::max(_pitch, camera_utility::MIN_PITCH);
+	glm::quat qYaw = glm::angleAxis(yaw, glm::vec3(0, 1, 0));
 
-	glm::vec3 eulerRadians(glm::radians(_pitch), glm::radians(_yawl), 0.f);
-	glm::quat qrotation(eulerRadians);
+	_direction = qYaw * _direction;
+	_strafe = qYaw * _strafe;
+	_tilt = qYaw * _tilt;
 
-	static glm::vec3 zAxis{ 0, 0, 1 };
-	static glm::vec3 xAxis{ 1, 0, 0 };
+	float pitch = glm::radians(static_cast<float>(pitchDelta));
 
-	_direction = zAxis * qrotation;
-	_strafe    = xAxis * qrotation;
+	glm::quat qPitch = glm::angleAxis(pitch, _strafe);
 
-	_tilt = glm::cross(_direction, _strafe);
-	std::cout << _tilt;
+	_direction = qPitch * _direction;
+	_tilt = qPitch * _tilt;
 }

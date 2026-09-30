@@ -50,11 +50,15 @@ Result GLProgram::AddShader(ShaderInfo shaderInfo)
 
     if (!compileRes)
     {
-        GLchar info[1024];
-        glGetShaderInfoLog(hShaderObj, sizeof(info), NULL, info);
+        GLint logSize = 0;
+        glGetShaderiv(hShaderObj, GL_INFO_LOG_LENGTH, &logSize);
+
+        std::vector<GLchar> info(logSize);
+        glGetShaderInfoLog(hShaderObj, sizeof(info), NULL, info.data());
+
         glDeleteShader(hShaderObj);
 
-        return BadResult(std::format("error compiling shader [{}]: \n '{}'", shaderInfo.FilePath, info));
+        return BadResult(std::format("error compiling shader [{}]: \n '{}'", shaderInfo.FilePath, info.data()));
     }
 
     _shaderObjToDelete.push_back(hShaderObj);
@@ -63,7 +67,7 @@ Result GLProgram::AddShader(ShaderInfo shaderInfo)
     return GoodResult();
 }
 
-Result GLProgram::CompileShaders() const
+Result GLProgram::CompileShaders()
 {
     glLinkProgram(_handle);
 
@@ -85,6 +89,7 @@ Result GLProgram::CompileShaders() const
     }
 
     glUseProgram(_handle);
+    DeleteShaderObjects();
 
     return GoodResult();
 }

@@ -2,10 +2,6 @@
 
 int OpenGLApp::Run(int argc, char** argv)
 {
-    Landfill lf;
-    lf.TestYawlCalc();
-    lf.TestPitchCalc();
-
     if (!Init()) { return EXIT_FAILURE; }
 
     GLint gTransformMatrix = _shaders.GetUniformLocation(TRANSFORM_LOCATION);
@@ -56,7 +52,7 @@ int OpenGLApp::Run(int argc, char** argv)
         glClear(GL_COLOR_BUFFER_BIT);
 
         static float koeff = 0.0f;
-        koeff += 0.01f;
+        koeff += 0.0001f;
 
         auto transform = _pipeline
             .RotateRadians({ 0.0f, koeff, 0.0f })

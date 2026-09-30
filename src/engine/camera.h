@@ -8,18 +8,6 @@
 #include <glm/gtx/quaternion.hpp>
 #include <iostream>
 
-namespace camera_utility
-{
-	inline constexpr double MAX_YAWL  =  180.0;
-	inline constexpr double MIN_YAWL  = -180.0;
-
-	inline constexpr double MAX_PITCH =   90.0;
-	inline constexpr double MIN_PITCH =  -90.0;
-
-	float CalculateYawl(glm::vec3 direction);
-	float CalculatePitch(glm::vec3 direction);
-}
-
 class Camera
 {
 public:
@@ -53,9 +41,6 @@ public:
 	constexpr static float CAMERA_CHANGE_SPEED_STEP = 0.01f;
 private:
 	float _cameraSpeed = 0.1f;
-
-	double _yawl = 0.f;
-	double _pitch = 0.f;
 
 	glm::vec3 _position   { 0, 0, 0 };
 	glm::vec3 _direction  { 0, 0, 1 };

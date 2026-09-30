@@ -1,5 +1,28 @@
 #include "landfill.h"
 
+namespace camera_utility
+{
+	float CalculateYawl(glm::vec3 direction)
+	{
+		direction = glm::normalize(direction);
+
+		float degrees = glm::degrees(glm::acos(direction.z));
+		degrees *= fless(direction.x, 0) ? -1 : 1;
+
+		return degrees;
+	}
+
+	float CalculatePitch(glm::vec3 direction)
+	{
+		direction = glm::normalize(direction);
+
+		float degrees = glm::degrees(glm::acos(direction.y));
+		degrees *= fless(direction.z, 0) ? 1 : -1;
+
+		return degrees;
+	}
+}
+
 void Landfill::PrintYawlAngles()
 {
 	{

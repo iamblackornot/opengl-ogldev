@@ -27,7 +27,7 @@ public:
     Result Init();
     Result AddShader(ShaderList shaders);
     Result AddShader(ShaderInfo shaderInfo);
-    Result CompileShaders() const;
+    Result CompileShaders();
     GLint GetUniformLocation(std::string_view varName) const;
     GLuint GetHandle() const;
     bool IsInitialized() const;
