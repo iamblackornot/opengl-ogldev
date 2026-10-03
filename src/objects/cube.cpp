@@ -43,14 +43,41 @@ void Cube::FillTexturedVertexBuffer()
 	glm::vec2 t10 = glm::vec2(1.0f, 0.0f);
 	glm::vec2 t11 = glm::vec2(1.0f, 1.0f);
 
-	vertexList.emplace_back(glm::vec3{  0.5f,   0.5f,   0.5f }, t00);
-	vertexList.emplace_back(glm::vec3{ -0.5f,   0.5f,  -0.5f }, t01);
-	vertexList.emplace_back(glm::vec3{ -0.5f,   0.5f,   0.5f }, t10);
-	vertexList.emplace_back(glm::vec3{  0.5f,  -0.5f,  -0.5f }, t11);
-	vertexList.emplace_back(glm::vec3{ -0.5f,  -0.5f,  -0.5f }, t00);
-	vertexList.emplace_back(glm::vec3{  0.5f,   0.5f,  -0.5f }, t10);
-	vertexList.emplace_back(glm::vec3{  0.5f,  -0.5f,   0.5f }, t01);
-	vertexList.emplace_back(glm::vec3{ -0.5f,  -0.5f,   0.5f }, t11);
+	// +Z face (front)
+	vertexList.push_back({ {-0.5f, -0.5f,  0.5f}, t00 });
+	vertexList.push_back({ { 0.5f, -0.5f,  0.5f}, t10 });
+	vertexList.push_back({ { 0.5f,  0.5f,  0.5f}, t11 });
+	vertexList.push_back({ {-0.5f,  0.5f,  0.5f}, t01 });
+
+	// -Z face (back)
+	vertexList.push_back({ { 0.5f, -0.5f, -0.5f}, t00 });
+	vertexList.push_back({ {-0.5f, -0.5f, -0.5f}, t10 });
+	vertexList.push_back({ {-0.5f,  0.5f, -0.5f}, t11 });
+	vertexList.push_back({ { 0.5f,  0.5f, -0.5f}, t01 });
+
+	// +X face (right)
+	vertexList.push_back({ { 0.5f, -0.5f,  0.5f}, t10 });
+	vertexList.push_back({ { 0.5f, -0.5f, -0.5f}, t00 });
+	vertexList.push_back({ { 0.5f,  0.5f, -0.5f}, t01 });
+	vertexList.push_back({ { 0.5f,  0.5f,  0.5f}, t11 });
+
+	// -X face (left)
+	vertexList.push_back({ {-0.5f, -0.5f, -0.5f}, t10 });
+	vertexList.push_back({ {-0.5f, -0.5f,  0.5f}, t00 });
+	vertexList.push_back({ {-0.5f,  0.5f,  0.5f}, t01 });
+	vertexList.push_back({ {-0.5f,  0.5f, -0.5f}, t11 });
+
+	// +Y face (top)
+	vertexList.push_back({ {-0.5f,  0.5f,  0.5f}, t00 });
+	vertexList.push_back({ { 0.5f,  0.5f,  0.5f}, t10 });
+	vertexList.push_back({ { 0.5f,  0.5f, -0.5f}, t11 });
+	vertexList.push_back({ {-0.5f,  0.5f, -0.5f}, t01 });
+
+	// -Y face (bottom)
+	vertexList.push_back({ {-0.5f, -0.5f, -0.5f}, t00 });
+	vertexList.push_back({ { 0.5f, -0.5f, -0.5f}, t10 });
+	vertexList.push_back({ { 0.5f, -0.5f,  0.5f}, t11 });
+	vertexList.push_back({ {-0.5f, -0.5f,  0.5f}, t01 });
 
 
 	_vbuffer.SetData(vertexList);
@@ -58,21 +85,14 @@ void Cube::FillTexturedVertexBuffer()
 
 void Cube::FillIndexBuffer()
 {
-	std::vector<uint32_t> indices
+	std::vector<GLuint> indices;
+
+	for (GLuint face = 0; face < 6; ++face) 
 	{
-		0, 1, 2,
-		1, 3, 4,
-		5, 6, 3,
-		7, 3, 6,
-		2, 4, 7,
-		0, 7, 6,
-		0, 5, 1,
-		1, 5, 3,
-		5, 0, 6,
-		7, 4, 3,
-		2, 1, 4,
-		0, 2, 7
-	};
+		GLuint base = face * 4;
+		indices.push_back(base + 0); indices.push_back(base + 1); indices.push_back(base + 2);
+		indices.push_back(base + 0); indices.push_back(base + 2); indices.push_back(base + 3);
+	}
 
 	_ebuffer.SetData(indices);
 }
